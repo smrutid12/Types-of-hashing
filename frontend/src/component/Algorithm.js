@@ -1,5 +1,15 @@
 import React, { useState } from "react";
-import { Tabs, Input, Alert, Typography, Row, Col, message, Card } from "antd";
+import {
+  Tabs,
+  Input,
+  Alert,
+  Typography,
+  Row,
+  Col,
+  message,
+  Card,
+  Button,
+} from "antd";
 import { getMD5Hash, getSHAHash, getCryptHash, getBcryptHash } from "../axios";
 
 const { Title, Paragraph } = Typography;
@@ -20,24 +30,20 @@ const Algorithm = () => {
         let response;
         switch (algorithm) {
           case "md5":
-            response = await getMD5Hash(input);
-            md5_res = response?.data?.md5_hash;
-            setMd5Hash(md5_res);
+            response = await getMD5Hash(md5Hash);
+            setOutput(response?.data?.md5_hash);
             break;
           case "sha":
-            response = await getSHAHash(input);
-            sha_res = response?.data?.sha256_hash;
-            setSha256Hash(sha_res);
+            response = await getSHAHash(sha256Hash);
+            setOutput(response?.data?.sha256_hash);
             break;
           case "crypt":
-            response = await getCryptHash(input);
-            crypt_res = response?.data?.crypt_hash;
-            setCryptHash(crypt_res);
+            response = await getCryptHash(cryptHash);
+            setOutput(response?.data?.crypt_hash);
             break;
           case "bcrypt":
-            response = await getBcryptHash(input);
-            bcrypt_res = response?.data?.bcrypt_hash;
-            setBcryptHash(bcrypt_res);
+            response = await getBcryptHash(bcryptHash);
+            setOutput(response?.data?.bcrypt_hash);
             break;
           default:
             message.error("Unknown algorithm");
@@ -49,7 +55,7 @@ const Algorithm = () => {
         setLoading(false);
       }
     } else {
-      setOutput("Please enter an input value.");
+      message.error("Please enter an input value.");
     }
   };
 
@@ -107,11 +113,25 @@ const Algorithm = () => {
                     message="Warning: MD5 is deprecated for security-critical applications!"
                     type="warning"
                   />
-                  <Input
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    placeholder="Enter text for MD5 hashing"
-                  />
+                  <Row justify="start">
+                    <Col xs={21}>
+                      <Input
+                        value={md5Hash}
+                        onChange={(e) => setMd5Hash(e.target.value)}
+                        placeholder="Enter text for MD5 hashing"
+                      />
+                    </Col>
+                    <Col xs={2} style={{ marginLeft: "10px" }}>
+                      <Button
+                        color="default"
+                        variant="solid"
+                        onSubmit={() => handleHashing("")}
+                      >
+                        Hash It
+                      </Button>
+                    </Col>
+                  </Row>
+
                   <Paragraph
                     style={{
                       fontSize: "16px",
@@ -121,7 +141,7 @@ const Algorithm = () => {
                       marginTop: "16px",
                     }}
                   >
-                    MD5 Hash: {md5Hash}
+                    MD5 Hash: {output}
                   </Paragraph>
                 </Tabs>
                 <Tabs tab="SHA-256" key="2">
@@ -137,11 +157,25 @@ const Algorithm = () => {
                     SHA-256 is a secure and widely used hashing algorithm,
                     resistant to collisions.
                   </Paragraph>
-                  <Input
-                    value={input}
-                    onChange={handleHashing}
-                    placeholder="Enter text for SHA-256 hashing"
-                  />
+                  <Row justify="start">
+                    <Col xs={21}>
+                      <Input
+                        value={sha256Hash}
+                        onChange={(e) => setSha256Hash(e.target.value)}
+                        placeholder="Enter text for SHA-256 hashing"
+                      />
+                    </Col>
+                    <Col xs={2} style={{ marginLeft: "10px" }}>
+                      <Button
+                        color="default"
+                        variant="solid"
+                        onSubmit={() => handleHashing("")}
+                      >
+                        Hash It
+                      </Button>
+                    </Col>
+                  </Row>
+
                   <Paragraph
                     style={{
                       fontSize: "16px",
@@ -167,11 +201,25 @@ const Algorithm = () => {
                     CRYPT is used for password hashing, but is considered less
                     secure than bcrypt.
                   </Paragraph>
-                  <Input
-                    value={input}
-                    onChange={handleHashing}
-                    placeholder="Enter text for CRYPT hashing"
-                  />
+                  <Row justify="start">
+                    <Col xs={21}>
+                      <Input
+                        value={cryptHash}
+                        onChange={(e) => setCryptHash(e.target.value)}
+                        placeholder="Enter text for CRYPT hashing"
+                      />
+                    </Col>
+                    <Col xs={2} style={{ marginLeft: "10px" }}>
+                      <Button
+                        color="default"
+                        variant="solid"
+                        onSubmit={() => handleHashing("")}
+                      >
+                        Hash It
+                      </Button>
+                    </Col>
+                  </Row>
+
                   <Paragraph
                     style={{
                       fontSize: "16px",
@@ -197,11 +245,29 @@ const Algorithm = () => {
                     Bcrypt is the most secure and recommended algorithm for
                     password hashing.
                   </Paragraph>
-                  <Input
-                    value={input}
-                    onChange={handleHashing}
-                    placeholder="Enter text for BCRYPT hashing"
+                  <Alert
+                    message="Bcrypt is the most secure and recommended algorithm!"
+                    type="success"
                   />
+                  <Row justify="start">
+                    <Col xs={21}>
+                      <Input
+                        value={bcryptHash}
+                        onChange={(e) => setBcryptHash(e.target.value)}
+                        placeholder="Enter text for BCRYPT hashing"
+                      />
+                    </Col>
+                    <Col xs={2} style={{ marginLeft: "10px" }}>
+                      <Button
+                        color="default"
+                        variant="solid"
+                        onSubmit={() => handleHashing("")}
+                      >
+                        Hash It
+                      </Button>
+                    </Col>
+                  </Row>
+
                   <Paragraph
                     style={{
                       fontSize: "16px",
@@ -213,10 +279,6 @@ const Algorithm = () => {
                   >
                     BCRYPT Hash: {bcryptHash}
                   </Paragraph>
-                  <Alert
-                    message="Bcrypt is the most secure and recommended algorithm!"
-                    type="success"
-                  />
                 </Tabs>
               </Tabs>
             </Col>
